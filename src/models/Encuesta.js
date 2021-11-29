@@ -1,6 +1,6 @@
-const moongose = require('mongoose');
+const mongoose = require('mongoose');
 
-const Schema = moongose.Schema;
+const Schema = mongoose.Schema;
 const encuestaSchema = new Schema({
     name: {
         type: String,
@@ -10,9 +10,9 @@ const encuestaSchema = new Schema({
         type: String,
         require: true
     },
-    questions: [{
-            type: moongose.Schema.Types.ObjectId,
-            ref: 'Pregunta'
+    sections: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Seccion'
     }],
     state: {
         type: Boolean,
@@ -20,7 +20,7 @@ const encuestaSchema = new Schema({
     }
 });
 
-const Encuesta = moongose.model('Encuesta', encuestaSchema);
+const Encuesta = mongoose.model('Encuesta', encuestaSchema);
 module.exports = {
     Encuesta
 }

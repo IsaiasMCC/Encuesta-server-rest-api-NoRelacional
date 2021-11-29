@@ -1,6 +1,6 @@
-const moongose = require('mongoose');
+const mongoose = require('mongoose');
 
-const Schema = moongose.Schema;
+const Schema = mongoose.Schema;
 const preguntaSchema = new Schema({
     name: {
         type: String,
@@ -11,7 +11,7 @@ const preguntaSchema = new Schema({
         default: ''
     },
     tipoPregunta: {
-        type: moongose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'TipoPregunta',
         required: true
     },
@@ -26,7 +26,7 @@ const preguntaSchema = new Schema({
     }
 });
 
-const Pregunta = moongose.model('Pregunta', preguntaSchema);
+const Pregunta = mongoose.model('Pregunta', preguntaSchema);
 module.exports = {
     Pregunta
 }

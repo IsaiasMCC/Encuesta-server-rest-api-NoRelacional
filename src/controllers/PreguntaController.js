@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const { Pregunta } = require('../models/Pregunta');
-const { Encuesta } = require('../models/Encuesta');
+const { Seccion } = require('../models/Seccion');
 
 const postPregunta = async (req, res) => {
     const id = req.params.id;
     const validarId = mongoose.isValidObjectId(id); 
     if ( !validarId ){
-        return res.status(400).json({ success: false, message: 'El id de la encuesta es incorrecto'});   
+        return res.status(400).json({ success: false, message: 'El id de la seccion es incorrecto'});   
     }
-    const validarIdEncuesta = await Encuesta.findById(id);
+    const validarIdSeccion = await Seccion.findById(id);
 
-    if ( !validarIdEncuesta ){
-        return res.status(400).json({ success: false, message: 'El id de la encuesta no existe'});   
+    if ( !validarIdSeccion ){
+        return res.status(400).json({ success: false, message: 'El id de la sección no existe'});   
     }
     const { name, tipoPregunta, optionRespuesta} = req.body; 
 
@@ -24,9 +24,10 @@ const postPregunta = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Error al crear la pregunta'}); 
     }
     await pregunta.save();
-    const encuesta = await Encuesta.findByIdAndUpdate(id, { $push: { questions: pregunta.id} });
-    if ( !encuesta){
-        return res.status(400).json({ success: false, message: 'Error al agregar pregunta a la encuesta'}); 
+    const seccion = await Seccion.findByIdAndUpdate(id, { $push: { questions: pregunta.id} });
+    
+    if ( !seccion){
+        return res.status(400).json({ success: false, message: 'Error al agregar pregunta a la seccion'}); 
     }
     return res.status(200).json({ success: true, message: 'pregunta agregada correctamente' });  
 }
