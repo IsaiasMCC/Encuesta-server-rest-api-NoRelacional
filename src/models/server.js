@@ -27,7 +27,7 @@ class Server{
         this.app.use(`${this.api}/encuestas`, require('../routes/encuestas'));
         this.app.use(`${this.api}/preguntas`, require('../routes/preguntas'));
         this.app.use(`${this.api}/tipopreguntas`, require('../routes/tipoPregunta'));
-        this.app.use(`${this.api}/seccion`, require('../routes/seccion'));
+        this.app.use(`${this.api}/seccions`, require('../routes/seccion'));
     }
 
     listen(){

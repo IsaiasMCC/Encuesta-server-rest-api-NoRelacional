@@ -24,11 +24,11 @@ const getTipoPregunta = async (req, res) => {
 };
 
 const getTipoPreguntas = async (req, res) => {
-    const List = await TipoPregunta.find();
-    if (!List){
+    const tipoPreguntas = await TipoPregunta.find();
+    if (!tipoPreguntas){
         res.status(400).json({ success: false, message: 'tipo de preguntas vacia'});
     }
-    return res.json({ success: true, List });
+    return res.json({ success: true, tipoPreguntas });
 }
 
 module.exports = {

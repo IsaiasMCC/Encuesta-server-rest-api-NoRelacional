@@ -14,6 +14,14 @@ const encuestaSchema = new Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Seccion'
     }],
+    fecha_creacion: {
+        type: Date,
+        default: Date.now
+    },
+    fecha_modificacion: {
+        type: Date,
+        default: ''
+    },
     state: {
         type: Boolean,
         default: false
