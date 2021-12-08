@@ -33,6 +33,8 @@ const getEncuestas = async (req, res) => {
     }
     return res.json({ success: true, encuestas });
 }
+
+
 module.exports = {
     postEncuesta,
     getEncuesta,

@@ -8,6 +8,9 @@ const tipoPreguntaSchema = new Schema({
     type: {
         type: Number,
         required: true 
+    },
+    multiple: {
+        type: Boolean,
     }
 });
 
