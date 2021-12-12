@@ -13,13 +13,13 @@ const postPregunta = async (req, res) => {
     if ( !validarIdSeccion ){
         return res.status(400).json({ success: false, message: 'El id de la sección no existe'});   
     }
-    const { name, tipoPregunta, optionRespuesta} = req.body; 
+    const { name, tipoPregunta, multiple} = req.body; 
 
     const validarTipo = mongoose.isValidObjectId(tipoPregunta);
     if (!validarTipo ){
         return res.status(400).json({ success: false, message: 'El tipo de pregunta no es valido'});  
     }
-    const pregunta = new Pregunta( { name, tipoPregunta, optionRespuesta});
+    const pregunta = new Pregunta( { name, tipoPregunta, multiple});
     if (!pregunta){
         return res.status(400).json({ success: false, message: 'Error al crear la pregunta'}); 
     }

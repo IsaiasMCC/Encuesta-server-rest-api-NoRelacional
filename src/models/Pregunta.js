@@ -17,9 +17,14 @@ const preguntaSchema = new Schema({
     },
     optionRespuesta: [
         {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'OptionRespuesta'
         }
     ],
+    multiple: {
+        type: Boolean,
+        default: false
+    },
     state: {
         type: Boolean,
         default: false

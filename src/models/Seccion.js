@@ -9,7 +9,7 @@ const seccionSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Pregunta'
     }],
-    status: {
+    state: {
         type: Boolean,
         default: false 
     }

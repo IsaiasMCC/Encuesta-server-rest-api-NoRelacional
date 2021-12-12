@@ -7,6 +7,7 @@ const { validarCampos } = require('../middlewares/validar-campos');
 router.post('/:id', [
     check('name', 'El campo name es obligatorio').not().isEmpty(),
     check('tipoPregunta', 'El campo tipoPregunta es obligatorio').not().isEmpty(),
+    check('multiple', 'El campo multiple es obligatorio').isBoolean(),
     validarCampos
 ], postPregunta);
 
