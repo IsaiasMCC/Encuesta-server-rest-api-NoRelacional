@@ -1,5 +1,6 @@
 const { EncuestaAplicada } = require('../models/EncuestaAplicada');
 const { Encuesta } = require('../models/Encuesta');
+const {OptionRespuesta } = require('../models/OptionRespuesta');
 const mongoose = require('mongoose');
 
 const postEncuestaAplicada = async (req, res ) => {
@@ -13,7 +14,17 @@ const postEncuestaAplicada = async (req, res ) => {
     if (!encuesta){
         return res.status(401).json({ success: false, message: 'La encuesta no existe'});
     }
-    const encuestaaplicada = await new EncuestaAplicada({ id_encuesta, answers});
+    const id_option_respuesta = new OptionRespuesta({value: 'Ninguno'});
+    await id_option_respuesta.save();
+    const answers1 = answers.map( (item) => {
+        const container = item;
+       
+        if (!container.id_option_respuestas){
+            container.id_option_respuestas = [id_option_respuesta.id];
+        }
+        return container
+    });
+    const encuestaaplicada = new EncuestaAplicada({ id_encuesta, answers: answers1 });
     if (!encuestaaplicada){
         return res.status(401).json({ success: false, message: 'Encuesta Aplicada no creada error'});
     }
