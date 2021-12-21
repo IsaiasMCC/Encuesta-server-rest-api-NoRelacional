@@ -17,7 +17,7 @@ const getEncuesta = async (req, res ) => {
     if(!validarId ){
         return res.status(400).json({ success: false, message: 'El id no es valido'});
     }
-    const encuesta = await Encuesta.findById(id).where('state').equals(false).populate({path: 'sections', select: '-status -__v -_id', populate: { path: 'questions', model: 'Pregunta', select: '-description -state -__v -_id', populate: [ { path: 'tipoPregunta', model: 'TipoPregunta', select: '-_id -__v '}, { path: 'optionRespuesta', model: 'OptionRespuesta', select: '-__v '}] }});
+    const encuesta = await Encuesta.findById(id).where('state').equals(false).populate({path: 'sections', select: '-status -__v -_id', populate: { path: 'questions', model: 'Pregunta', select: '-description -state -__v', populate: [ { path: 'tipoPregunta', model: 'TipoPregunta', select: '-_id -__v '}, { path: 'optionRespuesta', model: 'OptionRespuesta', select: '-__v '}] }});
  
     if (!encuesta){
         return res.status(400).json({ success: false, message: 'La encuesta no fue encontrada'});

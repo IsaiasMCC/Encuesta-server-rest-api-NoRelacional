@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const postEncuestaAplicada = async (req, res ) => {
     const { id_encuesta, answers} = req.body;
-
+    
     const validarId =  mongoose.isValidObjectId(id_encuesta);
     if (!validarId){
         return res.status(401).json({ success: false, message: 'Id no valido'});
