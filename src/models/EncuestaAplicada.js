@@ -7,28 +7,10 @@ const encuestaAplicadaSchema = new Schema({
         ref: 'Encuesta',
         required: true
     },
-    answers: [
-        {
-            _id: {
-                type: mongoose.Schema.Types.ObjectId,
-                index: true,
-                required: true,
-                auto: true
-            },
-            id_question: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Pregunta',
-                required: true
-            },
-            id_option_respuestas: [
-                {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'OptionRespuesta',
-                    required: true
-                }
-            ]
-        }
-    ]
+    answers: {
+        type: Array,
+        required: true
+    }
 });
 
 const EncuestaAplicada = mongoose.model('EncuestaAplicada', encuestaAplicadaSchema);

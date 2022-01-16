@@ -10,6 +10,10 @@ const encuestaSchema = new Schema({
         type: String,
         require: true
     },
+    nro_veces: {
+        type: Number,
+        required: true
+    },
     sections: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Seccion'
@@ -21,6 +25,10 @@ const encuestaSchema = new Schema({
     fecha_modificacion: {
         type: Date,
         default: ''
+    },
+    fecha_vigencia: {
+        type: String,
+        required: true
     },
     state: {
         type: Boolean,

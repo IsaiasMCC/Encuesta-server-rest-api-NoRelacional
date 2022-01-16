@@ -3,34 +3,52 @@ const { Encuesta } = require('../models/Encuesta');
 const {OptionRespuesta } = require('../models/OptionRespuesta');
 const mongoose = require('mongoose');
 
-const postEncuestaAplicada = async (req, res ) => {
-    const { id_encuesta, answers} = req.body;
+// const postEncuestaAplicada = async (req, res ) => {
+//     const { id_encuesta, answers} = req.body;
     
-    const validarId =  mongoose.isValidObjectId(id_encuesta);
+//     const validarId =  mongoose.isValidObjectId(id_encuesta);
+//     if (!validarId){
+//         return res.status(401).json({ success: false, message: 'Id no valido'});
+//     }
+//     const encuesta = await Encuesta.findById(id_encuesta);
+//     if (!encuesta){
+//         return res.status(401).json({ success: false, message: 'La encuesta no existe'});
+//     }
+//     const id_option_respuesta = new OptionRespuesta({value: 'Ninguno'});
+//     await id_option_respuesta.save();
+//     const answers1 = answers.map( (item) => {
+//         const container = item;
+       
+//         if (!container.id_option_respuestas){
+//             container.id_option_respuestas = [id_option_respuesta.id];
+//         }
+//         return container
+//     });
+//     const encuestaaplicada = new EncuestaAplicada({ id_encuesta, answers: answers1 });
+//     if (!encuestaaplicada){
+//         return res.status(401).json({ success: false, message: 'Encuesta Aplicada no creada error'});
+//     }
+//     await encuestaaplicada.save();
+//     return res.json({ success: true, message: 'Encuesta Aplicada agregada correctamente'});
+// }
+const postEncuestaAplicada = async (req, res) => {
+    const { answers } = req.body;
+        const validarId =  mongoose.isValidObjectId(answers.id_encuesta);
     if (!validarId){
         return res.status(401).json({ success: false, message: 'Id no valido'});
     }
-    const encuesta = await Encuesta.findById(id_encuesta);
+    const encuesta = await Encuesta.findById(answers.id_encuesta);
     if (!encuesta){
         return res.status(401).json({ success: false, message: 'La encuesta no existe'});
     }
-    const id_option_respuesta = new OptionRespuesta({value: 'Ninguno'});
-    await id_option_respuesta.save();
-    const answers1 = answers.map( (item) => {
-        const container = item;
-       
-        if (!container.id_option_respuestas){
-            container.id_option_respuestas = [id_option_respuesta.id];
-        }
-        return container
-    });
-    const encuestaaplicada = new EncuestaAplicada({ id_encuesta, answers: answers1 });
-    if (!encuestaaplicada){
-        return res.status(401).json({ success: false, message: 'Encuesta Aplicada no creada error'});
-    }
-    await encuestaaplicada.save();
-    return res.json({ success: true, message: 'Encuesta Aplicada agregada correctamente'});
-}
+
+    const aplicacion = new EncuestaAplicada( { id_encuesta: answers.id_encuesta, answers: answers.answers }); 
+    if ( !aplicacion )
+        return res.status(400).json({ success: false, message: 'aplicacion encuesta no pudo ser creado'});
+    await aplicacion.save();
+    // console.log(answers.answers)
+    return res.status(200).json({ success: true, message: 'aplicacion encuesta creada!' });
+} 
 
 const getEncuestasAplicadas = async (req, res) => {
     const encuestasaplicadas = await EncuestaAplicada.find().populate([ { path: 'answers.id_question', model: 'Pregunta', select: 'name'}, { path: 'answers.id_option_respuestas', model: 'OptionRespuesta', select: 'value'}]);

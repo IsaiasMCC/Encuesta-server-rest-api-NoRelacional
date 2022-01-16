@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Pregunta } = require('../models/Pregunta');
 const { Seccion } = require('../models/Seccion');
-
+const { OptionRespuesta } = require('../models/OptionRespuesta')
 const postPregunta = async (req, res) => {
     const id = req.params.id;
     const validarId = mongoose.isValidObjectId(id); 
@@ -32,6 +32,46 @@ const postPregunta = async (req, res) => {
     return res.status(200).json({ success: true, message: 'pregunta agregada correctamente' });  
 }
 
+const editPregunta = async (req, res) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId){
+        return res.status(400).json({ success: false, message: 'id no es valido'});
+    }
+    const pregunta = await Pregunta.findById(id);
+    if(!pregunta){
+        return res.status(400).json({ success: false, message: 'pregunta not fount'});
+    }
+    const { name, tipoPregunta, multiple } = req.body; 
+    const preguntaUpdate = await
+    Pregunta.findByIdAndUpdate(id , { name, tipoPregunta, multiple } );
+    if(!preguntaUpdate){
+        return res.status(400).json({ success: false, message: 'pregunta not update'});
+    }
+    console.log(preguntaUpdate)
+    return res.status(200).json({ success: true, message: 'seccion is updated'});
+}
+
+const deletePregunta = async (req, res) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId){
+        return res.status(400).json({ success: false, message: 'id no es valido'});
+    }
+    const pregunta = await Pregunta.findById(id);
+    if(!pregunta){
+        return res.status(400).json({ success: false, message: 'pregunta not fount'});
+    }
+    
+     await Seccion.updateMany({ $pull: { questions: { $in: `${id}`}}})
+    const a =  await OptionRespuesta.deleteMany({ _id: { $in: pregunta.optionRespuesta }})
+    console.log(a)
+     await Pregunta.findByIdAndRemove(id)
+    return res.status(200).json({ success: true, message: 'pregunta deleted'});
+}
+
 module.exports = {
-    postPregunta
+    postPregunta,
+    editPregunta,
+    deletePregunta
 }

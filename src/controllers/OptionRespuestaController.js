@@ -26,6 +26,41 @@ const postOptionRespuesta = async (req, res) => {
     return res.status(200).json({ success: true, message: 'option respuesta agregada correctamente' });  
 }
 
+const editOptionRespuesta = async (req, res) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId){
+        return res.status(400).json({ success: false, message: 'id no es valido'});
+    }
+    const oRespuesta = await OptionRespuesta.findById(id);
+    if(!oRespuesta){
+        return res.status(400).json({ success: false, message: 'Opcion Respuesta not found'});
+    }
+    const { value } = req.body; 
+    const oRespuestaUpdate = await
+    OptionRespuesta.findByIdAndUpdate(id , { value } );
+    if(!oRespuestaUpdate){
+        return res.status(400).json({ success: false, message: 'Opcion Respuesta not update'});
+    }
+    console.log(oRespuestaUpdate)
+    return res.status(200).json({ success: true, message: 'Opcion Respuesta is updated'});
+}
+const deleteOptionRespuesta = async (req, res) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId){
+        return res.status(400).json({ success: false, message: 'id no es valido'});
+    }
+    const oRespuesta = await OptionRespuesta.findById(id);
+    if(!oRespuesta){
+        return res.status(400).json({ success: false, message: 'Opcion Respuesta not found'});
+    }
+    const a = await Pregunta.updateMany({ $pull: { optionRespuesta: {$in: `${id}` }}})
+    await OptionRespuesta.findByIdAndRemove(id);
+    return res.status(200).json({ success: true, message: 'Opcion Respuesta deleted'});
+}
 module.exports = {
-    postOptionRespuesta
+    postOptionRespuesta,
+    editOptionRespuesta,
+    deleteOptionRespuesta
 }
