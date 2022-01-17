@@ -57,7 +57,15 @@ const getEncuestas = async (req, res) => {
     }
     return res.json({ success: true, encuestas });
 }
-
+const getEncuestasW = async (req, res) => {
+    const encuestas = await Encuesta.find().populate({path: 'sections', populate: { path: 'questions', model: 'Pregunta', populate: [ {path: 'tipoPregunta', model: 'TipoPregunta'}, {path: 'optionRespuesta', model: 'OptionRespuesta'}]}});
+    if (!encuestas){
+        res.status(400).json({ success: false, message: 'encuesta vacia'});
+    }
+    return res.json({ success: true, encuestas });
+}
+// populate([ { path: 'answers.id_question', model: 'Pregunta', select: 'name'}, { path: 'answers.id_option_respuestas', model: 'OptionRespuesta', select: 'value'}]);
+// .populate({path: 'sections', select: '-status -__v', populate: { path: 'questions', model: 'Pregunta', select: '-description -state -__v', populate: [ { path: 'tipoPregunta', model: 'TipoPregunta', select: ' -__v '}, { path: 'optionRespuesta', model: 'OptionRespuesta', select: '-__v '}] }});
 const deleteEncuesta = async (req, res) => {
     const id = req.params.id;
     const validarId = mongoose.isValidObjectId(id);
@@ -94,5 +102,6 @@ module.exports = {
     getEncuesta,
     getEncuestas,
     editEncuesta,
-    deleteEncuesta
+    deleteEncuesta,
+    getEncuestasW
 }

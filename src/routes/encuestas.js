@@ -1,10 +1,11 @@
 const { Router } = require('express');
 const router = Router();
 const { check }  = require('express-validator');
-const { postEncuesta, getEncuestas, getEncuesta, editEncuesta, deleteEncuesta} = require('../controllers/EncuestaController');
+const { postEncuesta, getEncuestas, getEncuesta, editEncuesta, deleteEncuesta, getEncuestasW} = require('../controllers/EncuestaController');
 const { validarCampos } = require('../middlewares/validar-campos');
 
 router.get('/', getEncuestas);
+router.get('/w', getEncuestasW);
 router.get('/:id', getEncuesta);
 router.delete('/:id', deleteEncuesta);
 router.post('/', [
