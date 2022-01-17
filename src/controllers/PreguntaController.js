@@ -70,8 +70,22 @@ const deletePregunta = async (req, res) => {
     return res.status(200).json({ success: true, message: 'pregunta deleted'});
 }
 
+const getPregunta = async (req, res) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId){
+        return res.status(400).json({ success: false, message: 'id no es valido'});
+    }
+    const pregunta = await Pregunta.findById(id).populate({path: 'optionRespuesta', model: 'OptionRespuesta'});
+    if(!pregunta){
+        return res.status(400).json({ success: false, message: 'pregunta not fount'});
+    }
+    return res.status(200).json({ success: true, pregunta})
+}
+
 module.exports = {
     postPregunta,
     editPregunta,
-    deletePregunta
+    deletePregunta,
+    getPregunta
 }
