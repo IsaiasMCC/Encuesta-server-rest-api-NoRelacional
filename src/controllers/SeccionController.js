@@ -34,7 +34,7 @@ const getSeccions = async (req, res) => {
     if(!validarId ){
         return res.status(400).json({ success: false, message: 'El id no es valido'});
     }
-    const encuesta = await Encuesta.findById(id).where('state').equals(false).populate({path: 'sections', select: '-status -__v'});
+    const encuesta = await Encuesta.findById(id).populate({path: 'sections', select: '-status -__v'});
  
     if (!encuesta){
         return res.status(400).json({ success: false, message: 'La encuesta no fue encontrada'});
