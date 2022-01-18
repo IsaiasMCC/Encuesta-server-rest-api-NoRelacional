@@ -41,7 +41,21 @@ const getEncuesta = async (req, res ) => {
     if(!validarId ){
         return res.status(400).json({ success: false, message: 'El id no es valido'});
     }
-    const encuesta = await Encuesta.findById(id).where('state').equals(false).populate({path: 'sections', select: '-status -__v', populate: { path: 'questions', model: 'Pregunta', select: '-description -state -__v', populate: [ { path: 'tipoPregunta', model: 'TipoPregunta', select: ' -__v '}, { path: 'optionRespuesta', model: 'OptionRespuesta', select: '-__v '}] }});
+    const encuesta = await Encuesta.findById(id).where('state').equals(true).populate({path: 'sections', select: '-status -__v', populate: { path: 'questions', model: 'Pregunta', select: '-description -state -__v', populate: [ { path: 'tipoPregunta', model: 'TipoPregunta', select: ' -__v '}, { path: 'optionRespuesta', model: 'OptionRespuesta', select: '-__v '}] }});
+ 
+    if (!encuesta){
+        return res.status(400).json({ success: false, message: 'La encuesta no fue encontrada'});
+    }
+    return res.json({ success: true, encuesta });
+}
+
+const getEncuestaWeb = async (req, res ) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId ){
+        return res.status(400).json({ success: false, message: 'El id no es valido'});
+    }
+    const encuesta = await Encuesta.findById(id).populate({path: 'sections', select: '-status -__v', populate: { path: 'questions', model: 'Pregunta', select: '-description -state -__v', populate: [ { path: 'tipoPregunta', model: 'TipoPregunta', select: ' -__v '}, { path: 'optionRespuesta', model: 'OptionRespuesta', select: '-__v '}] }});
  
     if (!encuesta){
         return res.status(400).json({ success: false, message: 'La encuesta no fue encontrada'});
@@ -49,7 +63,17 @@ const getEncuesta = async (req, res ) => {
     return res.json({ success: true, encuesta });
     
 }
+
 const getEncuestas = async (req, res) => {
+    
+    const encuestas = await Encuesta.find().where('state').equals(true);
+    if (!encuestas){
+        res.status(400).json({ success: false, message: 'encuesta vacia'});
+    }
+    return res.json({ success: true, encuestas });
+}
+
+const getEncuestasWeb = async (req, res) => {
     
     const encuestas = await Encuesta.find();
     if (!encuestas){
@@ -57,6 +81,7 @@ const getEncuestas = async (req, res) => {
     }
     return res.json({ success: true, encuestas });
 }
+
 const getEncuestasW = async (req, res) => {
     const encuestas = await Encuesta.find().populate({path: 'sections', populate: { path: 'questions', model: 'Pregunta', populate: [ {path: 'tipoPregunta', model: 'TipoPregunta'}, {path: 'optionRespuesta', model: 'OptionRespuesta'}]}});
     if (!encuestas){
@@ -97,11 +122,33 @@ const deleteEncuesta = async (req, res) => {
     await Encuesta.findByIdAndRemove(id);
     return res.json({ success: true, message: 'encuesta deleted' });
 }
+
+const changeState =  async (req, res) => {
+    const id = req.params.id;
+    const validarId = mongoose.isValidObjectId(id);
+    if(!validarId){
+        return res.status(400).json({ success: false, message: 'id no es valido'});
+    }
+    const encuesta = await Encuesta.findById(id);
+    if(!encuesta){
+        return res.status(400).json({ success: false, message: 'encuesta not fount'});
+    }
+    const { state } = req.body;
+    const stateUpdate = await
+    Encuesta.findByIdAndUpdate(id , { state } );
+    if(!stateUpdate){
+        return res.status(400).json({ success: false, message: 'estado de encuesta not update'});
+    }
+    return res.json({ success: true, message: 'state update!'})
+}
 module.exports = {
     postEncuesta,
     getEncuesta,
     getEncuestas,
     editEncuesta,
     deleteEncuesta,
-    getEncuestasW
+    getEncuestasW,
+    getEncuestasWeb,
+    getEncuestaWeb,
+    changeState
 }

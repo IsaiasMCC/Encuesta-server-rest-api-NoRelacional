@@ -24,6 +24,20 @@ const postPregunta = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Error al crear la pregunta'}); 
     }
     await pregunta.save();
+    //
+    const pregunta2 = await Pregunta.findById(pregunta.id).populate({path:'tipoPregunta', model: 'TipoPregunta'});
+    if (pregunta2.tipoPregunta.type === 2){
+        const optionrespuesta = new OptionRespuesta( { value:'Ninguno' });
+        if (!optionrespuesta){
+            return res.status(400).json({ success: false, message: 'Error al crear la option respuesta'}); 
+        }
+        await optionrespuesta.save();
+        const respuesta = await Pregunta.findByIdAndUpdate(pregunta.id, { $push: { optionRespuesta: optionrespuesta.id} });
+        if ( !respuesta){
+            return res.status(400).json({ success: false, message: 'Error al agregar option respuesta a la pregunta'}); 
+        }
+    //
+    }
     const seccion = await Seccion.findByIdAndUpdate(id, { $push: { questions: pregunta.id} });
     
     if ( !seccion){
