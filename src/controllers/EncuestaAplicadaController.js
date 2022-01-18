@@ -48,7 +48,7 @@ const getResultadosPr = async (req, res) => {
     if (!encuesta){
         return res.status(401).json({ success: false, message: 'La encuesta no existe'});
     }
-    const pregunta = await Pregunta.findById(id_pregunta);
+    const pregunta = await Pregunta.findById(id_pregunta).populate({path:'optionRespuesta', model: 'OptionRespuesta'});
     if (!pregunta){
         return res.status(401).json({ success: false, message: 'La Pregunta no existe'});
     }
@@ -57,8 +57,8 @@ const getResultadosPr = async (req, res) => {
     var array2 = array.map( (elem) =>
         {
            return {
-               id: elem.toString(),
-               nombre: '',
+               id: elem.id,
+               nombre: elem.value,
                cant: 0
            }
         }
